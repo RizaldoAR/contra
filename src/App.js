@@ -16,6 +16,8 @@ import SplashScreen from './screens/SplashScreen';
 import LaporanBerhasil from './screens/LaporanBerhasil';
 import FormScreening from './screens/FormScreening';
 import Register from './screens/Register';
+import QrScan from './screens/QrScan';
+import ScanBerhasil from './screens/ScanBerhasil';
 
 // Navigation
 import {NavigationContainer} from '@react-navigation/native';
@@ -73,6 +75,18 @@ export default function App() {
           <Stack.Screen
             name="Register"
             component={Register}
+            options={{
+              headerShown: false,
+            }}></Stack.Screen>
+          <Stack.Screen
+            name="QrScan"
+            component={QrScan}
+            options={{
+              headerShown: false,
+            }}></Stack.Screen>
+          <Stack.Screen
+            name="ScanBerhasil"
+            component={ScanBerhasil}
             options={{
               headerShown: false,
             }}></Stack.Screen>

@@ -30,7 +30,7 @@ export default function LoginScreen() {
       .get('https://www.boredapi.com/api/activity')
       .then(response => {
         console.log('Response', response?.data);
-        navigation.navigate('DasboardStatusHijau');
+        navigation.replace('DasboardStatusHijau');
       })
       .catch(error => {
         console.log('Error:', error);

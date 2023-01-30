@@ -1,10 +1,14 @@
+import {useNavigation} from '@react-navigation/native';
 import {TouchableOpacity, StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function ScanMasuk() {
+  const navigation = useNavigation();
   return (
-    <TouchableOpacity style={styles.button}>
+    <TouchableOpacity
+      style={styles.button}
+      onPress={() => navigation.navigate('QrScan')}>
       <View style={styles.buttonContainer}>
         <Icon name="arrow-right-circle-outline" size={30} color="#000000" />
         <Text style={styles.textButton}>Scan Masuk</Text>

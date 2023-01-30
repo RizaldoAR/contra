@@ -1,3 +1,4 @@
+import 'react-native-reanimated';
 import * as React from 'react';
 import {AppRegistry} from 'react-native';
 import {

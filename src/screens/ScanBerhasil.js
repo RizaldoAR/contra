@@ -1,10 +1,17 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, Image, TouchableOpacity} from 'react-native';
 import {Text} from 'react-native-paper';
+import {useNavigation} from '@react-navigation/native';
 
 import HeaderBar2 from '../components/HeaderBar2';
 
 export default function ScanBerhasil() {
+  const navigation = useNavigation();
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigation.replace('DasboardStatusHijau');
+    }, 2000);
+  }, []);
   const [title, setTitle] = useState('SCAN QR');
   return (
     <View style={styles.container}>
