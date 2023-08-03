@@ -60,10 +60,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   menuContainer: {
-    paddingTop: 25,
     flex: 2,
-    padding: 20,
+    padding: 10,
     flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'center',
   },
   textStatus: {
     color: 'white',

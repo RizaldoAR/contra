@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
+  Alert,
   StyleSheet,
   View,
   Image,
@@ -11,9 +12,66 @@ import HeaderBar2 from '../components/HeaderBar2';
 import ScanMasuk from '../components/ScanMasuk';
 import ScanKeluar from '../components/ScanKeluar';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {useNavigation} from '@react-navigation/native';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LaporCovid() {
   const [title] = useState('FORM SCREENING');
+  const navigation = useNavigation();
+
+  const [imagepath, setImagepath] = useState('');
+  const [token, setToken] = useState('');
+  const [image, setImage] = useState('');
+  const [text, setText] = useState('');
+
+  // TOKEN
+
+  useEffect(() => {
+    (async () => {
+      await getUsertoken();
+      console.log(token);
+    })();
+  }, []);
+
+  const getUsertoken = async () => {
+    const user = JSON.parse(await AsyncStorage.getItem('user'));
+    if (user) {
+      setToken(user.value.data.token);
+    }
+  };
+
+  // Upload FIle
+  const [text2, setText2] = useState('');
+  const options = {
+    title: 'Select Image',
+    type: 'library',
+    options: {
+      selectionLimit: 1,
+      mediaType: 'photo',
+      includeBase64: false,
+    },
+  };
+  const openGallery = async () => {
+    const images = await launchImageLibrary(options);
+    setImage(images);
+    var namafile = images.assets[0].fileName;
+    var new_namafile = namafile.replace('rn_image_picker_lib_temp_', '');
+    setText2(new_namafile);
+    let tempDate = new Date();
+    let fDate =
+      tempDate.getFullYear() +
+      '-' +
+      (tempDate.getMonth() + 1) +
+      '-' +
+      tempDate.getDate();
+    setText(fDate);
+    console.log(fDate);
+    getUsertoken();
+
+    // console.log(images.assets[0].fileName);
+  };
 
   //Date Picker
   //   const [date, setDate] = useState(new Date());
@@ -45,6 +103,65 @@ export default function LaporCovid() {
   //     setMode(currentMode);
   //   };
 
+  // Submit
+
+  const screeningForm = async path => {
+    const param = {
+      tanggal: text,
+      hasil_test_rapid: path,
+    };
+
+    const config = {
+      method: 'post',
+      url: 'http://aldo.sutralian.online/api/laporan/screening',
+      headers: {
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json',
+        Cookie: 'ci_session=tfs13o0t56mqd42n2u1lq1iih7fevm77',
+      },
+      data: param,
+    };
+    console.log(param);
+    console.log(token);
+
+    await axios(config)
+      .then(response => {
+        console.log(response);
+        console.log('berhasil');
+        navigation.replace('DashboardWaitlist');
+      })
+      .catch(error => {
+        console.log(error.response.data);
+        Alert.alert('Error', error.response.data);
+        navigation.replace('FormScreening');
+      });
+  };
+
+  const Submit = async () => {
+    const formdata = new FormData();
+    formdata.append('image', {
+      uri: image.assets[0].uri,
+      type: image.assets[0].type,
+      name: image.assets[0].fileName,
+    });
+
+    await axios
+      .post('http://aldo.sutralian.online/api/upload', formdata, {
+        headers: {'Content-Type': 'multipart/form-data'},
+      })
+      .then(res => {
+        console.log(res);
+        setImagepath(res.data.data.filePath);
+
+        if (res.status == 201) {
+          screeningForm(res.data.data.file_path);
+        }
+      })
+      .catch(err => {
+        console.log('Error', err.response);
+      });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.containerHeader}>
@@ -56,20 +173,15 @@ export default function LaporCovid() {
             Mohon lampirkan bukti hasil test Rapid Antigen / PCR Swab Tes yang
             masih berlaku
           </Text>
+          <Text>{text2}</Text>
         </View>
         <View style={styles.Button}>
-          <Button
-            icon="upload"
-            mode="contained"
-            onPress={() => console.log('pressed')}>
+          <Button icon="upload" mode="contained" onPress={openGallery}>
             Upload File
           </Button>
         </View>
         <View style={styles.Button}>
-          <Button
-            style={styles.Lapor}
-            mode="contained"
-            onPress={() => console.log('pressed')}>
+          <Button style={styles.Lapor} mode="contained" onPress={Submit}>
             <Text style={styles.LaporText}>SUBMIT</Text>
           </Button>
         </View>
@@ -97,7 +209,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   textContainer: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     paddingBottom: 20,
     paddingLeft: 10,
   },

@@ -1,9 +1,17 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, Image} from 'react-native';
 import {Appbar, Text} from 'react-native-paper';
 import HeaderBar from '../components/HeaderBar';
+import {useNavigation} from '@react-navigation/native';
 
 export default function DashboardWaitLaporan() {
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigation.replace('Login');
+    }, 10000);
+  }, []);
   return (
     <View style={styles.container}>
       <View style={styles.containerHeader}>

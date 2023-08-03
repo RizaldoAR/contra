@@ -1,16 +1,48 @@
 import React, {useEffect, useState} from 'react';
-import {Text, StyleSheet, View, Image, ActivityIndicator} from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  View,
+  Image,
+  ActivityIndicator,
+  Alert,
+} from 'react-native';
 import {TextInput, Button, HelperText} from 'react-native-paper';
 import {Formik} from 'formik';
 import * as yup from 'yup';
 import DashBoardStatusKuning from './DashboardStatusKuning';
 import axios from 'axios';
 import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen() {
   const handleSubmit = async values => {
     setLoading(true);
-    await callGetUsersList();
+    await callGetUsersList(values);
+  };
+
+  const login = async value => {
+    try {
+      await AsyncStorage.setItem('user', JSON.stringify({value}));
+      // const tempToken = JSON.parse(await AsyncStorage.getItem('user'));
+      // const tokentoken = tempToken.value.data.token;
+      // console.log(tokentoken);
+      if (value.data.email == 'admin1@gmail.com') {
+        navigation.replace('AdminDashboard');
+      } else {
+        if (value.data.warna == 'HIJAU') {
+          navigation.replace('DasboardStatusHijau');
+        } else if (value.data.warna == 'MERAH') {
+          navigation.replace('DashboardStatusMerah');
+        } else if (value.data.warna == 'KUNING') {
+          navigation.replace('DashboardStatusKuning');
+        } else {
+          navigation.replace('DashboardWaitlist');
+        }
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Something Went Wrong');
+    }
   };
 
   const loginSchema = yup.object().shape({
@@ -24,20 +56,57 @@ export default function LoginScreen() {
       .min(8, ({min}) => 'Password must be at least 8 characters'),
   });
   const [loading, setLoading] = useState(false);
+  const [showpesan, setShowpesan] = useState(false);
+  const [pesanerror, setPesanerror] = useState('');
+  const [token, setToken] = useState('');
 
-  const callGetUsersList = () => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowpesan(false);
+    }, 1000);
+  }, [showpesan]);
+
+  const callGetUsersList = values => {
     axios
-      .get('https://www.boredapi.com/api/activity')
+      .post('http://aldo.sutralian.online/api/auth/login', {
+        email: values.email,
+        password: values.password,
+      })
       .then(response => {
-        console.log('Response', response?.data);
-        navigation.replace('DasboardStatusHijau');
+        console.log('response', response.data);
+        if (response.data) {
+          let user = {};
+          user = response.data;
+          login(user);
+        }
+        return response;
       })
       .catch(error => {
-        console.log('Error:', error);
+        console.log('error ', error);
+        if (error == 'AxiosError: Request failed with status code 401') {
+          setPesanerror('Password atau email salah');
+          setShowpesan(true);
+          setLoading(false);
+        }
       });
+    // .then(response => {
+    //   console.log(response.data);
+    //   // navigation.replace('DasboardStatusHijau');
+    // })
+    // .catch(error => {
+
+    //   console.log('Error:', error);
+    // });
   };
 
   const navigation = useNavigation();
+
+  const getLoader = () => {
+    if (loading) {
+      return <ActivityIndicator size="large"></ActivityIndicator>;
+    }
+  };
+
   return (
     <Formik
       validationSchema={loginSchema}
@@ -92,19 +161,27 @@ export default function LoginScreen() {
               {errors.password}
             </HelperText>
           </View>
+          <View style={styles.errorContainer}>
+            <HelperText type="error" visible={showpesan}>
+              {pesanerror}
+            </HelperText>
+          </View>
+          <View style={styles.inputContainer}>{getLoader()}</View>
           <View style={styles.inputContainer}>
-            {/* <ActivityIndicator animating={loading} size="large" /> */}
             <Button
               buttonColor="#F4D013"
               mode="contained"
+              testID="loginButton"
               onPress={handleSubmit}
               disabled={!isValid}>
               <Text style={styles.fontButton}>Login</Text>
             </Button>
           </View>
+
           <View style={styles.inputContainer}>
             <Button
               buttonColor="#FF0000"
+              testID="registerButton"
               mode="contained"
               onPress={() => navigation.navigate('Register')}>
               <Text style={styles.fontButton}>Daftar</Text>
@@ -146,5 +223,8 @@ const styles = StyleSheet.create({
     color: '#F5F5F5',
     fontFamily: 'Poppins',
     fontWeight: 'bold',
+  },
+  errorContainer: {
+    alignItems: 'center',
   },
 });

@@ -35,9 +35,9 @@ export default function DashboardStatusHijau() {
           <View style={styles.laporContainer}>
             <LaporButton></LaporButton>
           </View>
-          <View style={styles.FormContainer}>
+          {/* <View style={styles.FormContainer}>
             <FormScreeningButton></FormScreeningButton>
-          </View>
+          </View> */}
         </View>
       </View>
     </View>

@@ -1,8 +1,19 @@
 import {StyleSheet, View, Image} from 'react-native';
 import {Text} from 'react-native-paper';
 import HeaderBar from '../components/HeaderBar';
+import {useNavigation} from '@react-navigation/native';
+import React, {useState, useEffect} from 'react';
 
 export default function DashboardWaitlist() {
+  const navigation = useNavigation();
+
+  const [status, setStatus] = useState('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigation.replace('Login');
+    }, 30000);
+  });
   return (
     <View style={styles.container}>
       <View style={styles.containerHeader}>

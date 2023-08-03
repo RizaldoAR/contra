@@ -1,13 +1,18 @@
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, CommonActions} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {StyleSheet, View, Image, TouchableOpacity} from 'react-native';
 import {Appbar, Text} from 'react-native-paper';
 
 export default function HeaderBar2({title}) {
-  const _handleMore = () => console.log('Shown more');
+  const navigation = useNavigation();
+  const _handleMore = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'Login'}],
+    });
+  };
 
   const _handleMenu = () => console.log('Menu');
-  const navigation = useNavigation();
 
   return (
     <View style={styles.containerHeader}>
@@ -22,7 +27,7 @@ export default function HeaderBar2({title}) {
             </Text>
           </View>
           <View style={styles.appbarNotif}>
-            <Appbar.Action icon="bell" onPress={_handleMore} />
+            <Appbar.Action icon="logout" onPress={_handleMore} />
           </View>
         </View>
       </Appbar.Header>

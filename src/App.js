@@ -18,10 +18,21 @@ import FormScreening from './screens/FormScreening';
 import Register from './screens/Register';
 import QrScan from './screens/QrScan';
 import ScanBerhasil from './screens/ScanBerhasil';
-
+import DashBoardStatusKuning from './screens/DashboardStatusKuning';
+import DashboardWaitLaporan from './screens/DashboardWaitLaporan';
+import DashboardStatusMerah from './screens/DashboardStatusMerah';
+import DashboardWaitlist from './screens/DashboardWaitlist';
+import AdminDashboard from './screens/AdminDashboard';
+import LaporanAdmin from './screens/LaporanAdmin';
+import FormScreeningList from './screens/FormScreeningList';
 // Navigation
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import DetailLaporanAdmin from './screens/DetailLaporanAdmin';
+import FormScreeningAdmin from './screens/FormScreeningAdmin';
+import DetailFormKesehatanAdmin from './screens/DetailFormKesehatanAdmin';
+import MonitoringLaporan from './screens/MonitoringLaporan';
+import DetailMahasiswa from './screens/DetailMahasiswa';
 
 const Stack = createNativeStackNavigator();
 
@@ -87,6 +98,78 @@ export default function App() {
           <Stack.Screen
             name="ScanBerhasil"
             component={ScanBerhasil}
+            options={{
+              headerShown: false,
+            }}></Stack.Screen>
+          <Stack.Screen
+            name="DashboardWaitLaporan"
+            component={DashboardWaitLaporan}
+            options={{
+              headerShown: false,
+            }}></Stack.Screen>
+          <Stack.Screen
+            name="DashboardStatusMerah"
+            component={DashboardStatusMerah}
+            options={{
+              headerShown: false,
+            }}></Stack.Screen>
+          <Stack.Screen
+            name="DashboardStatusKuning"
+            component={DashBoardStatusKuning}
+            options={{
+              headerShown: false,
+            }}></Stack.Screen>
+          <Stack.Screen
+            name="DashboardWaitlist"
+            component={DashboardWaitlist}
+            options={{
+              headerShown: false,
+            }}></Stack.Screen>
+          <Stack.Screen
+            name="AdminDashboard"
+            component={AdminDashboard}
+            options={{
+              headerShown: false,
+            }}></Stack.Screen>
+          <Stack.Screen
+            name="LaporanAdmin"
+            component={LaporanAdmin}
+            options={{
+              headerShown: false,
+            }}></Stack.Screen>
+          <Stack.Screen
+            name="FormScreeningList"
+            component={FormScreeningList}
+            options={{
+              headerShown: false,
+            }}></Stack.Screen>
+          <Stack.Screen
+            name="DetailLaporanAdmin"
+            component={DetailLaporanAdmin}
+            options={{
+              headerShown: false,
+            }}></Stack.Screen>
+          <Stack.Screen
+            name="FormScreeningAdmin"
+            component={FormScreeningAdmin}
+            options={{
+              headerShown: false,
+            }}></Stack.Screen>
+          <Stack.Screen
+            name="DetailFormKesehatanAdmin"
+            component={DetailFormKesehatanAdmin}
+            options={{
+              headerShown: false,
+            }}></Stack.Screen>
+          <Stack.Screen
+            name="MonitoringLaporan"
+            component={MonitoringLaporan}
+            options={{
+              headerShown: false,
+            }}></Stack.Screen>
+          <Stack.Screen
+            name="DetailMahasiswa"
+            component={DetailMahasiswa}
             options={{
               headerShown: false,
             }}></Stack.Screen>

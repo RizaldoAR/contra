@@ -1,9 +1,16 @@
 import React from 'react';
 import {StyleSheet, View, Image, TouchableOpacity} from 'react-native';
 import {Appbar} from 'react-native-paper';
+import {useNavigation, CommonActions} from '@react-navigation/native';
 
 export default function HeaderBar() {
-  const _handleMore = () => console.log('Shown more');
+  const navigation = useNavigation();
+  const _handleMore = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'Login'}],
+    });
+  };
 
   const _handleMenu = () => console.log('Menu');
 
@@ -20,7 +27,7 @@ export default function HeaderBar() {
             </TouchableOpacity>
           </View>
           <View style={styles.appbarNotif}>
-            <Appbar.Action icon="bell" onPress={_handleMore} />
+            <Appbar.Action icon="logout" onPress={_handleMore} />
           </View>
         </View>
       </Appbar.Header>
